@@ -1,4 +1,4 @@
-inspecpde:
+inspecode:
 
   cpd:
     thresholds: { num-issues: 0 }
