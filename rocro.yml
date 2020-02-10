@@ -1,0 +1,20 @@
+inspecpde:
+
+  cpd:
+    thresholds: { num-issues: 0 }
+
+  grep:
+    thresholds: { num-issues: 0 }
+
+  jscpd:
+    thresholds: { num-issues: 0 }
+
+  misspell:
+    auto-fix: true
+    thresholds: { num-issues: 0 }
+
+  scalafmt:
+    thresholds: { num-issues: 0 }
+
+  scalastyle:
+    thresholds: { num-issues: 0 }
