@@ -1,7 +1,7 @@
 inspecode:
 
   cpd:
-    thresholds: { num-issues: 9 }
+    thresholds: { num-issues: 3 }
 
   grep:
     thresholds: { num-issues: 4 }
@@ -16,7 +16,7 @@ inspecode:
   scalafmt:
     auto-fix: true
     #config-file: .scalafmt.conf    # (auto-detected)
-    thresholds: { num-issues: 68 }
+    thresholds: { num-issues: 70 }
 
   scalastyle:
     thresholds: { num-issues: 62 }
