@@ -45,10 +45,17 @@ class BlockImportChecker extends ScalariformChecker {
       List(PositionError(firstImport.firstToken.offset))
 
     // rename or hide import
-    case BlockImportExpr(prefix, ImportSelectors(_, Expr(
-          List(_, GeneralTokens(List(Token(ARROW, "=>", _, _))), _)
-        ), otherImports, _)) =>
-
+    case BlockImportExpr(
+        prefix,
+        ImportSelectors(
+          _,
+          Expr(
+            List(_, GeneralTokens(List(Token(ARROW, "=>", _, _))), _)
+          ),
+          otherImports,
+          _
+        )
+        ) =>
       val blockImportFound = otherImports exists {
         case (_, Expr(List(GeneralTokens(List(Token(tokenType, _, _, _)))))) =>
           tokenType != USCORE

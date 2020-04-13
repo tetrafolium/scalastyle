@@ -56,7 +56,7 @@ class SimplifyBooleanExpressionChecker extends ScalariformChecker {
   private def matches[T <: AstNode](t: Clazz[T]): Boolean = {
     t match {
       case t: InfixExprClazz => matchesInfixOp(t.id) && (boolean(t.left) || boolean(t.right))
-      case _ => false
+      case _                 => false
     }
   }
 
@@ -69,9 +69,9 @@ class SimplifyBooleanExpressionChecker extends ScalariformChecker {
   case class GeneralTokensClazz(_position: Option[Int], bool: Boolean) extends BaseClazz[GeneralTokens](_position)
 
   private def localvisit(ast: Any): List[BaseClazz[AstNode]] = ast match {
-    case t: InfixExpr => List(InfixExprClazz(Some(t.firstToken.offset), t.infixId, localvisit(t.left), localvisit(t.right)))
+    case t: InfixExpr     => List(InfixExprClazz(Some(t.firstToken.offset), t.infixId, localvisit(t.left), localvisit(t.right)))
     case t: GeneralTokens => List(GeneralTokensClazz(Some(t.firstToken.offset), isBoolean(t)))
-    case t: Any => visit(t, localvisit)
+    case t: Any           => visit(t, localvisit)
   }
 
   private def boolean(expr: List[Clazz[_]]) = expr.size == 1 && expr(0).isInstanceOf[GeneralTokensClazz] && expr(0).asInstanceOf[GeneralTokensClazz].bool

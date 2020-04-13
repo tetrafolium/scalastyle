@@ -67,7 +67,7 @@ class MethodLengthChecker extends CombinedChecker {
 
         // do not count deftoken line and end block line
         for (i <- (start + 1) until end) {
-          val lineText = lines.lines(i - 1).text.trim     // zero based index, therefore "-1" when accessing the line
+          val lineText = lines.lines(i - 1).text.trim // zero based index, therefore "-1" when accessing the line
           if (ignoreEmpty && lineText.isEmpty) {
             // do nothing
           } else if (lineText.startsWith(SinglelineComment)) {
@@ -97,8 +97,9 @@ class MethodLengthChecker extends CombinedChecker {
       val head = lines.toLineColumn(t.t.defToken.offset).get.line + 1
       val tail = lines.toLineColumn(t.t.tokens.last.offset).get.line - 1
       val emptyLines = if (ignoreEmpty) {
-        lines.lines.slice(head - 1, tail)   // extract actual method content
-          .count(_.text.isEmpty)            // count empty lines
+        lines.lines
+          .slice(head - 1, tail) // extract actual method content
+          .count(_.text.isEmpty) // count empty lines
       } else {
         0
       }
@@ -108,6 +109,6 @@ class MethodLengthChecker extends CombinedChecker {
 
   private def localvisit(ast: Any): List[FunDefOrDclClazz] = ast match {
     case t: FunDefOrDcl => List(FunDefOrDclClazz(t, Some(t.nameToken.offset), localvisit(t.localDef)))
-    case t: Any => visit(t, localvisit)
+    case t: Any         => visit(t, localvisit)
   }
 }

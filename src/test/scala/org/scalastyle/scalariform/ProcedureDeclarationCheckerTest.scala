@@ -82,5 +82,3 @@ final case class DhtNode(ipv4: String, ipv6: String, udpPort: Int, tcpPort: Int,
     assertErrors(List(), source)
   }
 }
-
-

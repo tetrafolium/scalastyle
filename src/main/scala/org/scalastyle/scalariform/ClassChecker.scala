@@ -40,7 +40,7 @@ class EmptyClassChecker extends ScalariformChecker {
 
   def matches(t: TmplDef): Boolean = {
     t.templateBodyOption match {
-      case None => false
+      case None      => false
       case Some(tbo) => isEmptyBlock(tbo)
     }
   }
@@ -63,12 +63,12 @@ class ClassTypeParameterChecker extends AbstractClassChecker {
     ast match {
       case typeParam: TypeParam => {
         typeParam.contents match {
-          case List(GeneralTokens(list)) => Some(list.head.text)
-          case List(GeneralTokens(list), TypeParamClause(x)) => innermostName(x(1))
-          case VarianceTypeElement(_) :: GeneralTokens(list) :: Nil => Some(list.head.text)
-          case GeneralTokens(list) :: tail => Some(list.head.text)
+          case List(GeneralTokens(list))                             => Some(list.head.text)
+          case List(GeneralTokens(list), TypeParamClause(x))         => innermostName(x(1))
+          case VarianceTypeElement(_) :: GeneralTokens(list) :: Nil  => Some(list.head.text)
+          case GeneralTokens(list) :: tail                           => Some(list.head.text)
           case VarianceTypeElement(_) :: GeneralTokens(list) :: tail => Some(list.head.text)
-          case _ => None
+          case _                                                     => None
         }
       }
       case _ => None
@@ -77,7 +77,7 @@ class ClassTypeParameterChecker extends AbstractClassChecker {
 
   def matches(t: TmplClazz): Boolean = {
     t.t.typeParamClauseOpt match {
-      case None => false
+      case None      => false
       case Some(tbo) => matches(tbo)
     }
   }

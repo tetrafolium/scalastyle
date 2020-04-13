@@ -26,8 +26,8 @@ import org.scalastyle.ScalastyleError
 import _root_.scalariform.lexer.Tokens
 
 /**
- * comment check for line comment style TODO or FIXME
- */
+  * comment check for line comment style TODO or FIXME
+  */
 class TodoCommentChecker extends CombinedChecker {
   val errorKey = "todo.comment"
   val defaultWords = "TODO|FIXME"

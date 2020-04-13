@@ -75,6 +75,6 @@ class CyclomaticComplexityChecker extends CombinedChecker {
 
   private def localvisit(ast: Any): List[FunDefOrDclClazz] = ast match {
     case t: FunDefOrDcl => List(FunDefOrDclClazz(t, Some(t.nameToken.offset), visit(t, localvisit)))
-    case t: Any => visit(t, localvisit)
+    case t: Any         => visit(t, localvisit)
   }
 }

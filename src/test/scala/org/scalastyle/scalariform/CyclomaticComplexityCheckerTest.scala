@@ -168,11 +168,7 @@ class Foobar {
 }
 """
 
-    assertErrors(
-      List.empty,
-      source, Map("maximum" -> "3", "countCases" -> "false"))
-    assertErrors(
-      List(columnError(5, 6, List("4", "3"))),
-      source, Map("maximum" -> "3", "countCases" -> "true"))
+    assertErrors(List.empty, source, Map("maximum" -> "3", "countCases" -> "false"))
+    assertErrors(List(columnError(5, 6, List("4", "3"))), source, Map("maximum" -> "3", "countCases" -> "true"))
   }
 }

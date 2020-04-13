@@ -55,7 +55,7 @@ class MagicNumberChecker extends ScalariformChecker {
       g
     }).map {
       case Expr(List(t: Expr)) => t
-      case d: Any => d
+      case d: Any              => d
     }
 
     intList.filter(t => !valList.contains(t.t)).map(t => PositionError(t.position))
@@ -68,16 +68,16 @@ class MagicNumberChecker extends ScalariformChecker {
   private def matches(t: ExprVisit, ignores: Set[String]) = {
     toIntegerLiteralExprElement(t.t.contents) match {
       case Some(x) => !ignores.contains(x)
-      case None => false
+      case None    => false
     }
   }
 
   private def toIntegerLiteralExprElement(list: List[ExprElement]): Option[String] = {
     list match {
       case List(Expr(List(PrefixExprElement(t), GeneralTokens(gtList)))) => toIntegerLiteral(t, toIntegerLiteralToken(gtList))
-      case List(PrefixExprElement(t), GeneralTokens(gtList)) => toIntegerLiteral(t, toIntegerLiteralToken(gtList))
-      case List(GeneralTokens(gtList)) => toIntegerLiteralToken(gtList)
-      case _ => None
+      case List(PrefixExprElement(t), GeneralTokens(gtList))             => toIntegerLiteral(t, toIntegerLiteralToken(gtList))
+      case List(GeneralTokens(gtList))                                   => toIntegerLiteralToken(gtList)
+      case _                                                             => None
     }
   }
 
@@ -85,29 +85,34 @@ class MagicNumberChecker extends ScalariformChecker {
     (prefixExpr.text, intLiteral) match {
       case ("+", Some(i)) => Some(i)
       case ("-", Some(i)) => Some("-" + i)
-      case _ => None
+      case _              => None
     }
   }
 
   private def toIntegerLiteralToken(list: List[Token]): Option[String] = {
     list match {
       case List(Token(tokenType, text, start, end)) if tokenType == INTEGER_LITERAL => Some(text.replaceAll("[Ll]", ""))
-      case _ => None
+      case _                                                                        => None
     }
   }
 
   private def localvisit(ast: Any): List[ExprVisit] = ast match {
     case Expr(List(t: Expr)) => List(ExprVisit(t, t.firstToken.offset, localvisit(t.contents)))
-    case t: Expr => List(ExprVisit(t, t.firstToken.offset, localvisit(t.contents)))
-    case t: Any => VisitorHelper.visit(t, localvisit)
+    case t: Expr             => List(ExprVisit(t, t.firstToken.offset, localvisit(t.contents)))
+    case t: Any              => VisitorHelper.visit(t, localvisit)
   }
 
-  case class PatDefOrDclVisit(t: PatDefOrDcl, valOrVarToken: Token, pattern: List[PatDefOrDclVisit], otherPatterns: List[PatDefOrDclVisit],
-                              equalsClauseOption: List[PatDefOrDclVisit])
+  case class PatDefOrDclVisit(
+      t: PatDefOrDcl,
+      valOrVarToken: Token,
+      pattern: List[PatDefOrDclVisit],
+      otherPatterns: List[PatDefOrDclVisit],
+      equalsClauseOption: List[PatDefOrDclVisit]
+  )
 
   private def localvisitVal(ast: Any): List[PatDefOrDclVisit] = ast match {
-    case t: PatDefOrDcl => List(PatDefOrDclVisit(t, t.valOrVarToken, localvisitVal(t.pattern),
-                                    localvisitVal(t.otherPatterns), localvisitVal(t.equalsClauseOption)))
+    case t: PatDefOrDcl =>
+      List(PatDefOrDclVisit(t, t.valOrVarToken, localvisitVal(t.pattern), localvisitVal(t.otherPatterns), localvisitVal(t.equalsClauseOption)))
     case t: Any => VisitorHelper.visit(t, localvisitVal)
   }
 
@@ -116,7 +121,7 @@ class MagicNumberChecker extends ScalariformChecker {
   private def toOption(t: PatDefOrDclVisit): Option[Expr] = {
     t.t.equalsClauseOption match {
       case Some((equals: Token, expr: Expr)) if t.t.valOrVarToken.tokenType == VAL && toIntegerLiteralExprElement(expr.contents).isDefined => Some(expr)
-      case _ => None
+      case _                                                                                                                               => None
     }
   }
 }

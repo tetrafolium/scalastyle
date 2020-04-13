@@ -38,30 +38,27 @@ object CommentFilter {
   def findCommentFilters(comments: List[Comment], lines: Lines): List[CommentFilter] =
     findOneLineCommentFilters(comments, lines) ++ findOnOffCommentFilters(comments, lines)
 
-  private[this] def checkEmpty(s:String) = if (s != "") Some(s) else None
-  private[this] def splitIds(s: String, notEmpty: Boolean = false):List[String] = s.trim.split("\\s+").toList match {
-    case Nil if notEmpty => List("")
+  private[this] def checkEmpty(s: String) = if (s != "") Some(s) else None
+  private[this] def splitIds(s: String, notEmpty: Boolean = false): List[String] = s.trim.split("\\s+").toList match {
+    case Nil if notEmpty  => List("")
     case ls: List[String] => ls
   }
 
-  private[this] def findOneLineCommentFilters(comments: List[Comment], lines: Lines):List[CommentFilter] =
+  private[this] def findOneLineCommentFilters(comments: List[Comment], lines: Lines): List[CommentFilter] =
     for {
-      comment      <- comments
-      OneLine(s)   <- List(comment.text.trim)
+      comment <- comments
+      OneLine(s) <- List(comment.text.trim)
       (start, end) <- lines.toFullLineTuple(comment.token.offset).toList
-      id           <- splitIds(s, true)
+      id <- splitIds(s, true)
     } yield CommentFilter(checkEmpty(id), Some(start), Some(end))
 
   private[this] def findOnOffCommentFilters(comments: List[Comment], lines: Lines): List[CommentFilter] = {
-    val it:List[CommentInter] =
+    val it: List[CommentInter] =
       for {
-        comment                <- comments
+        comment <- comments
         OnOff(onoff, idString) <- List(comment.text.trim) // this is a bit ugly
-        id                     <- splitIds( idString )
-      } yield CommentInter( checkEmpty(id)
-                          , comment.token.offset
-                          , onoff == "off"
-                          )
+        id <- splitIds(idString)
+      } yield CommentInter(checkEmpty(id), comment.token.offset, onoff == "off")
 
     val list = ListBuffer[CommentFilter]()
     val inMap = new mutable.HashMap[Option[String], Boolean]()
@@ -74,7 +71,7 @@ object CommentFilter {
           inMap.put(ci.id, false)
           start.remove(ci.id)
         }
-        case (true, true) => // off then off, do nothing
+        case (true, true)   => // off then off, do nothing
         case (false, false) => // on then on, do nothing
         case (false, true) => { // on then off, reset start
           start.put(ci.id, lines.toLineColumn(ci.position))
@@ -83,7 +80,7 @@ object CommentFilter {
       }
     })
 
-    inMap.foreach( e => {
+    inMap.foreach(e => {
       if (e._2) {
         list += CommentFilter(e._1, start.getOrElse(e._1, None), None)
       }
@@ -95,7 +92,7 @@ object CommentFilter {
   def filterApplies[T <: FileSpec](m: Message[T], cfs: List[CommentFilter]): Boolean = {
     m match {
       case se: StyleError[_] => !cfs.filter(idMatches(se.key)).exists(filterApplies(se))
-      case _ => true
+      case _                 => true
     }
   }
 
@@ -108,9 +105,9 @@ object CommentFilter {
       val m = se.lineNumber.get
       (cf.start, cf.end) match {
         case (Some(s), Some(e)) => m >= s.line && m < e.line
-        case (Some(s), None) => m >= s.line
-        case (None, Some(e)) => false // we just have an :off, filter doesn't apply
-        case (None, None) => false // this isn't possible, say it doesn't apply
+        case (Some(s), None)    => m >= s.line
+        case (None, Some(e))    => false // we just have an :off, filter doesn't apply
+        case (None, None)       => false // this isn't possible, say it doesn't apply
       }
     }
   }

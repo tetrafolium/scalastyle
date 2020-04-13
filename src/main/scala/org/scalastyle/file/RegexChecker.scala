@@ -34,7 +34,7 @@ class RegexChecker extends FileChecker {
     var errorList: List[ColumnError] = Nil
 
     if (lineByLine) {
-      for ( (line, idx) <- lines.lines.zipWithIndex ){
+      for ((line, idx) <- lines.lines.zipWithIndex) {
         val allMatches = regExp.findAllIn(line.text)
 
         while (allMatches.hasNext) {
@@ -64,7 +64,7 @@ class RegexChecker extends FileChecker {
     var line = 0
     var found = false
 
-    while (!found){
+    while (!found) {
       val currentLine = lines.lines(line)
 
       if (location >= currentLine.start && location < currentLine.end) {

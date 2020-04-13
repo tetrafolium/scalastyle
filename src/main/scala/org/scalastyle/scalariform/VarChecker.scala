@@ -43,10 +43,10 @@ abstract class VarChecker extends ScalariformChecker {
 
   private def localvisit(enclosingFunction: Boolean)(ast: Any): List[PatDefOrDcl] = ast match {
     case t: PatDefOrDcl if t.valOrVarToken.tokenType == VAR && matches(enclosingFunction) => List(t) ::: visit(t, localvisit(enclosingFunction))
-    case t: TemplateBody => visit(t, localvisit(false))
-    case t: FunBody => visit(t, localvisit(true))
-    case t: AnonymousFunction => visit(t, localvisit(true))
-    case t: Any => visit(t, localvisit(enclosingFunction))
+    case t: TemplateBody                                                                  => visit(t, localvisit(false))
+    case t: FunBody                                                                       => visit(t, localvisit(true))
+    case t: AnonymousFunction                                                             => visit(t, localvisit(true))
+    case t: Any                                                                           => visit(t, localvisit(enclosingFunction))
   }
 }
 

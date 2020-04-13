@@ -130,9 +130,17 @@ class DisallowSpaceBeforeTokenTest extends AssertionsForJUnit with CheckerTest {
         |
       """.stripMargin
 
-    assertErrors(List(columnError(4, 14, List(":")), columnError(5, 8, List(":")),
-      columnError(7, 14, List(":")), columnError(8, 17, List(")")),
-      columnError(8, 19, List(":")), columnError(10, 8, List(":"))), source)
+    assertErrors(
+      List(
+        columnError(4, 14, List(":")),
+        columnError(5, 8, List(":")),
+        columnError(7, 14, List(":")),
+        columnError(8, 17, List(")")),
+        columnError(8, 19, List(":")),
+        columnError(10, 8, List(":"))
+      ),
+      source
+    )
   }
 }
 
@@ -223,7 +231,7 @@ class EnsureSpaceBeforeTokenTest extends AssertionsForJUnit with CheckerTest {
   override protected val key: String = "ensure.single.space.before.token"
   override protected val classUnderTest = classOf[EnsureSingleSpaceBeforeTokenChecker]
 
-@Test def testOK(): Unit = {
+  @Test def testOK(): Unit = {
     val source =
       """
         |package foobar

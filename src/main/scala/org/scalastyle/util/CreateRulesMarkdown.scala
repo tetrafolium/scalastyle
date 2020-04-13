@@ -14,7 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package org.scalastyle.util
 
 import java.nio.charset.StandardCharsets
@@ -65,16 +64,16 @@ object CreateRulesMarkdown {
 
   private def withTitle(os: Option[String], title: String): List[String] = os match {
     case Some(x) => List("#### " + title, x, "")
-    case _ => Nil
+    case _       => Nil
   }
 
   private def id(s: String) = s.replaceAll("\\.", "_")
 
   private def contents(checkers: List[DefinitionChecker], config: Config): List[String] = {
     val cs = checkers.map(c => {
-        val desc = config.getString(c.id + ".description").replaceAll("''\\[''", "'\\\\['")
-        "|[" + c.className + "](#" + id(c.className) + ")|" + desc + "|"
-      })
+      val desc = config.getString(c.id + ".description").replaceAll("''\\[''", "'\\\\['")
+      "|[" + c.className + "](#" + id(c.className) + ")|" + desc + "|"
+    })
 
     List("""| Checker | Description |""", """| ------------- | ------------- |""") ::: cs ::: List("")
   }
@@ -82,15 +81,17 @@ object CreateRulesMarkdown {
   private def checker(c: DefinitionChecker, doc: Documentation, config: Config): List[String] = {
     val desc = config.getString(c.id + ".description").replaceAll("''\\[''", "'\\\\['")
 
-    val header = List(s"""<a name="${id(c.className)}" />""",
-    "",
-    s"""### ${c.className} - ${desc}""",
-    "",
-    " * id - " + c.id,
-    " * description - " + desc,
-    " * class - " + c.className,
-    " * default level - " + c.level,
-    "")
+    val header = List(
+      s"""<a name="${id(c.className)}" />""",
+      "",
+      s"""### ${c.className} - ${desc}""",
+      "",
+      " * id - " + c.id,
+      " * description - " + desc,
+      " * class - " + c.className,
+      " * default level - " + c.level,
+      ""
+    )
 
     val justifcation = withTitle(doc.justification, "Justification")
     val description = withTitle(doc.extraDescription, "Description")
@@ -111,10 +112,16 @@ object CreateRulesMarkdown {
       List(x.toString)
     }
 
-    val s = doc.example.map { x => new PrettyPrinter(1000, 1).format(toXml(docFile + ":" + c.id, x)) }
+    val s = doc.example.map { x =>
+      new PrettyPrinter(1000, 1).format(toXml(docFile + ":" + c.id, x))
+    }
     val x = s.map(t => <pre>{t}</pre>).map(x => new XmlPrettyPrinter(1000, 1).format(x))
 
-    val x2 = if (x.isEmpty) { "TBD" } else { x.mkString("\nor\n") }
+    val x2 = if (x.isEmpty) {
+      "TBD"
+    } else {
+      x.mkString("\nor\n")
+    }
 
     val example = List("", "### Example configuration", x2)
 
@@ -130,18 +137,19 @@ object CreateRulesMarkdown {
     val scalastyleDefinition = ScalastyleDefinition.readFromXml(sdefStream)
     val config = ConfigFactory.load()
 
-    val scalastyleDocumentation = (XML.load(sdocStream) \\ "check").map{
-      ns => (ns.attribute("id").get.text, Documentation(toText(ns \\ "justification"),
-        toText(ns \\ "extra-description"), toList(ns \\ "example-configuration")))
+    val scalastyleDocumentation = (XML.load(sdocStream) \\ "check").map { ns =>
+      (ns.attribute("id").get.text, Documentation(toText(ns \\ "justification"), toText(ns \\ "extra-description"), toList(ns \\ "example-configuration")))
     }.toMap
 
-    val fileHeader = List("---",
+    val fileHeader = List(
+      "---",
       "layout: scalastyle",
       """title: "Scalastyle: Implemented Rules"""",
       "---",
       "",
       "There are " + scalastyleDefinition.checkers.size + " rules which are currently implemented:",
-      "")
+      ""
+    )
 
     val checkers = scalastyleDefinition.checkers.sortWith((e1, e2) => (e1.className compareTo e2.className) < 0)
 
@@ -165,14 +173,15 @@ object CreateRulesMarkdown {
     if (args.length == 0) {
       usage(BuildInfo.version)
     } else {
-      val exitVal = try {
-        generateToFile(args(0))
-      } catch {
-        case e: Exception => {
-          e.printStackTrace(System.err)
-          System.exit(1)
+      val exitVal =
+        try {
+          generateToFile(args(0))
+        } catch {
+          case e: Exception => {
+            e.printStackTrace(System.err)
+            System.exit(1)
+          }
         }
-      }
     }
   }
 }

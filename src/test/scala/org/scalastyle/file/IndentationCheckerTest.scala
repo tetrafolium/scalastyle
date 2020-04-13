@@ -26,7 +26,7 @@ class IndentationCheckerTest extends AssertionsForJUnit with CheckerTest {
   val classUnderTest = classOf[IndentationChecker]
 
   val cleanSource =
-"""
+    """
 /**
  * Scaladoc comments should pass
  */
@@ -61,7 +61,7 @@ class B(
 
   @Test def forExpression(): Unit = {
     val source =
-"""
+      """
 val id = 50
 for {
   a <- findA(id)
@@ -76,7 +76,7 @@ for {
 
   @Test def dsl(): Unit = {
     val source =
-"""
+      """
   |val id = 123
   |val (m, g) = (GroupMember.syntax("m"), Group.syntax("g"))
   |val groupMember = withSQL {
@@ -90,21 +90,19 @@ for {
 
     assertErrors(Nil, source)
   }
-
-
   @Test def testNoErrorsSetTabSize(): Unit = {
-    val source = cleanSource replaceAll("  ", "    ")
+    val source = cleanSource replaceAll ("  ", "    ")
     assertErrors(List(), source, Map("tabSize" -> "4", "classParamIndentSize" -> "8"))
   }
 
   @Test def testNoErrorsWithTabs(): Unit = {
-    val source = cleanSource replaceAll("  ", "\t")
+    val source = cleanSource replaceAll ("  ", "\t")
     assertErrors(List(), source)
   }
 
   @Test def testErrorsIncorrectTabSize(): Unit = {
     val source =
-"""
+      """
 class A {
  val foo = 1
    def bar(a: String) = {
@@ -117,7 +115,7 @@ class A {
 
   @Test def testExtraIndent(): Unit = {
     val source =
-"""
+      """
 class A {
   val foo = 1
   def bar(a: String) = {
@@ -130,7 +128,7 @@ class A {
 
   @Test def testCorrectMethodParamIndent(): Unit = {
     val source =
-"""
+      """
 class A {
   def longMethodWithCorrectIndentParams(
       paramDoubleIndent: Boolean,
@@ -145,7 +143,7 @@ class A {
 
   @Test def testMethodParamUnderIndent(): Unit = {
     val source =
-"""
+      """
 class A {
   def longMethodWithUnderIndentedParams(
     paramDoubleIndent: Boolean,
@@ -160,7 +158,7 @@ class A {
 
   @Test def testMethodParamOverIndent(): Unit = {
     val source =
-"""
+      """
 class A {
   def longMethodWithOverIndentedParams(
         paramDoubleIndent: Boolean,
@@ -174,12 +172,12 @@ class A {
   }
 
   /**
-   * Check that we don't accidentally think that val defintions are method defintions just because
-   * it includes the word def, and complain about subsequent method argument indentation
-   */
+    * Check that we don't accidentally think that val defintions are method defintions just because
+    * it includes the word def, and complain about subsequent method argument indentation
+    */
   @Test def testValNotConsideredMethod(): Unit = {
     val source =
-"""
+      """
 class A {
   val defSomething = Map(
     "ehllo" -> "world"
@@ -192,7 +190,7 @@ class A {
 
   @Test def testExtendNotConsideredClassIndent(): Unit = {
     val source =
-"""
+      """
 object A extends B(
   a, b, c, d) {
 

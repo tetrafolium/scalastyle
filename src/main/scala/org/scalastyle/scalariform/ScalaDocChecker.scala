@@ -222,12 +222,14 @@ class ScalaDocChecker extends CombinedChecker {
    * we do not bother descending down any further
    */
   // scalastyle:off cyclomatic.complexity
-  private def localVisit(skip: Boolean,
-                         fallback: HiddenTokens,
-                         ignoreOverride: Boolean,
-                         indentStyle: DocIndentStyle,
-                         lines: Lines,
-                         tokensToIgnore: Set[String])(ast: Any): List[ScalastyleError] = {
+  private def localVisit(
+      skip: Boolean,
+      fallback: HiddenTokens,
+      ignoreOverride: Boolean,
+      indentStyle: DocIndentStyle,
+      lines: Lines,
+      tokensToIgnore: Set[String]
+  )(ast: Any): List[ScalastyleError] = {
 
     def shouldSkip(node: AstNode) = skip || tokensToIgnore.contains(node.getClass.getSimpleName)
 
@@ -339,7 +341,8 @@ class ScalaDocChecker extends CombinedChecker {
     if (wrongTokensToIgnore.nonEmpty) {
       throw new IllegalArgumentException(
         s"ignoreTokenTypes contained wrong types: $wrongTokensToIgnore, " +
-          s"available types are $availableTokensToIgnore")
+          s"available types are $availableTokensToIgnore"
+      )
     }
   }
 
@@ -429,7 +432,8 @@ object ScalaDocChecker {
           case "/**"                    => None
           case "*/"                     => None
           case text: Any                => Some(RawScalaDocLine(text))
-      })
+        }
+      )
 
       def combineScalaDocFor[A](lines: List[ScalaDocLine], tag: String, f: (String, String) => A): List[A] = lines match {
         case TagSclaDocLine(`tag`, ref, text) :: ls =>
@@ -464,10 +468,12 @@ object ScalaDocChecker {
     * @param throws the throws clause, if present
     * @param indentStyle doc indent style
     */
-  private case class ScalaDoc(text: String,
-                              params: List[ScalaDocParameter],
-                              typeParams: List[ScalaDocParameter],
-                              returns: Option[String],
-                              throws: Option[String],
-                              indentStyle: DocIndentStyle)
+  private case class ScalaDoc(
+      text: String,
+      params: List[ScalaDocParameter],
+      typeParams: List[ScalaDocParameter],
+      returns: Option[String],
+      throws: Option[String],
+      indentStyle: DocIndentStyle
+  )
 }

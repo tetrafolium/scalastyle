@@ -23,10 +23,10 @@ import org.scalatest.junit.AssertionsForJUnit
 // scalastyle:off magic.number
 
 /**
- * Test that checks that return keyword should not be used
- *
- * @author Galder Zamarreño
- */
+  * Test that checks that return keyword should not be used
+  *
+  * @author Galder Zamarreño
+  */
 class ReturnCheckerTest extends AssertionsForJUnit with CheckerTest {
 
   protected val classUnderTest = classOf[ReturnChecker]

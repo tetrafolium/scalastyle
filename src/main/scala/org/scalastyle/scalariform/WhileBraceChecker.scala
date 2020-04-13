@@ -35,7 +35,7 @@ class WhileBraceChecker extends CombinedChecker {
   private def hasBraces(expr: WhileExpr) = {
     expr.body match {
       case Expr(List(_: BlockExpr)) => true
-      case _ => false
+      case _                        => false
     }
   }
 }
