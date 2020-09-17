@@ -399,10 +399,12 @@ class ScalaDocCheckerTest extends AssertionsForJUnit with CheckerTest {
 
   @Test def ignoreTokenTypes(): Unit = {
 
-    val cases = Seq(Seq("val a = 1", "var a = 2") -> "PatDefOrDcl",
+    val cases = Seq(
+      Seq("val a = 1", "var a = 2") -> "PatDefOrDcl",
       Seq("class A", "case class A", "object A", "trait A") -> "TmplDef",
       Seq("type B = A") -> "TypeDefOrDcl",
-      Seq("def A(): Unit") -> "FunDefOrDcl")
+      Seq("def A(): Unit") -> "FunDefOrDcl"
+    )
 
     for ((declerations, ignoreTokenType) <- cases;
          decleration <- declerations) {
@@ -418,10 +420,8 @@ class ScalaDocCheckerTest extends AssertionsForJUnit with CheckerTest {
         |  override val v = 1
         |}""".stripMargin
 
-    assertErrors(List.empty, source,
-      Map("ignoreOverride" -> "true"))
-    assertErrors(List(lineError(3, List(Missing)), lineError(4, List(Missing))), source,
-      Map("ignoreOverride" -> "false"))
+    assertErrors(List.empty, source, Map("ignoreOverride" -> "true"))
+    assertErrors(List(lineError(3, List(Missing)), lineError(4, List(Missing))), source, Map("ignoreOverride" -> "false"))
   }
 
   @Test def indentStyleUndefined(): Unit = {
@@ -432,10 +432,8 @@ class ScalaDocCheckerTest extends AssertionsForJUnit with CheckerTest {
    class c"""
 
     assertErrors(List.empty, source)
-    assertErrors(List(lineError(5, List(InvalidDocStyle))), source,
-      Map("indentStyle" -> "scaladoc"))
-    assertErrors(List(lineError(5, List(InvalidDocStyle))), source,
-      Map("indentStyle" -> "javadoc"))
+    assertErrors(List(lineError(5, List(InvalidDocStyle))), source, Map("indentStyle" -> "scaladoc"))
+    assertErrors(List(lineError(5, List(InvalidDocStyle))), source, Map("indentStyle" -> "javadoc"))
   }
 
   @Test def indentStyleScaladoc(): Unit = {
@@ -446,10 +444,8 @@ class ScalaDocCheckerTest extends AssertionsForJUnit with CheckerTest {
    class c"""
 
     assertErrors(List.empty, source)
-    assertErrors(List.empty, source,
-      Map("indentStyle" -> "scaladoc"))
-    assertErrors(List(lineError(5, List(InvalidDocStyle))), source,
-      Map("indentStyle" -> "javadoc"))
+    assertErrors(List.empty, source, Map("indentStyle" -> "scaladoc"))
+    assertErrors(List(lineError(5, List(InvalidDocStyle))), source, Map("indentStyle" -> "javadoc"))
   }
 
   @Test def indentStyleJavadoc(): Unit = {
@@ -460,10 +456,8 @@ class ScalaDocCheckerTest extends AssertionsForJUnit with CheckerTest {
    class c"""
 
     assertErrors(List.empty, source)
-    assertErrors(List(lineError(5, List(InvalidDocStyle))), source,
-      Map("indentStyle" -> "scaladoc"))
-    assertErrors(List.empty, source,
-      Map("indentStyle" -> "javadoc"))
+    assertErrors(List(lineError(5, List(InvalidDocStyle))), source, Map("indentStyle" -> "scaladoc"))
+    assertErrors(List.empty, source, Map("indentStyle" -> "javadoc"))
   }
 
   @Test def indentImplicitDefScalaOrJavaDoc(): Unit = {

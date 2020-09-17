@@ -43,7 +43,7 @@ class LowercasePatternMatchChecker extends ScalariformChecker {
   private def matches(t: CasePattern) = {
     t.pattern.tokens match {
       case List(t: Token) => t.tokenType == VARID && t.text.length() > 0 && t.text(0).isLower
-      case _ => false
+      case _              => false
     }
   }
 

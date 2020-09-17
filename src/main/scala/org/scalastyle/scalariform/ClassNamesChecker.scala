@@ -92,17 +92,17 @@ class PackageNamesChecker extends ScalariformChecker {
 
     @annotation.tailrec
     def getNextPackageName(tokens: List[Token]): (List[Token], List[Token]) = tokens match {
-      case Nil => (Nil, Nil)
+      case Nil                                   => (Nil, Nil)
       case hd :: tail if hd.tokenType == PACKAGE => tail.span(isPartOfPackageName)
-      case l: Any => getNextPackageName(l.dropWhile(tok => tok.tokenType != PACKAGE))
+      case l: Any                                => getNextPackageName(l.dropWhile(tok => tok.tokenType != PACKAGE))
     }
 
     @annotation.tailrec
     def getPackageNameLoop(tokens: List[Token], myAccumulator: List[List[Token]]): List[List[Token]] =
       getNextPackageName(tokens) match {
-        case (Nil, Nil) => myAccumulator.reverse  // Return the result, but reverse since we gathered backward
+        case (Nil, Nil)       => myAccumulator.reverse // Return the result, but reverse since we gathered backward
         case (Nil, remainder) => getPackageNameLoop(remainder, myAccumulator) // Found package object - try again
-        case (l, remainder) =>  // add match to results, go look again
+        case (l, remainder) => // add match to results, go look again
           val pkgName = l.filter(tok => tok.tokenType != DOT) // Strip out the dots between varids
           getPackageNameLoop(remainder, pkgName :: myAccumulator)
       }
@@ -162,8 +162,11 @@ class MethodNamesChecker extends AbstractSingleMethodChecker[MethodNamesCheckerP
   val errorKey = "method.name"
 
   protected def matchParameters(): MethodNamesCheckerParameters = {
-    MethodNamesCheckerParameters(getString("regex", DefaultRegex), getString("ignoreRegex", DefaultIgnoreRegex),
-        getBoolean("ignoreOverride", DefaultIgnoreOverride))
+    MethodNamesCheckerParameters(
+      getString("regex", DefaultRegex),
+      getString("ignoreRegex", DefaultIgnoreRegex),
+      getBoolean("ignoreOverride", DefaultIgnoreOverride)
+    )
   }
 
   protected def matches(t: FullDefOrDclVisit, p: MethodNamesCheckerParameters): Boolean = {
@@ -192,10 +195,11 @@ class MethodArgumentNamesChecker extends AbstractSingleMethodChecker[MethodArgum
   def matches(t: FullDefOrDclVisit, p: MethodArgumentNamesCheckerParameters): Boolean = {
     getParams(t.funDefOrDcl.paramClauses) match {
       case Nil => false
-      case params: List[Param] => params.exists { pc =>
-        val name = pc.id.text
-        !matches(p.ignoreRegex(), name) && !matches(p.regex(), name)
-      }
+      case params: List[Param] =>
+        params.exists { pc =>
+          val name = pc.id.text
+          !matches(p.ignoreRegex(), name) && !matches(p.regex(), name)
+        }
     }
   }
 
@@ -220,18 +224,19 @@ class FieldNamesChecker extends ScalariformChecker {
     localVisit(regex, objectFieldRegex, inValDef = false)(ast.immediateChildren.head)
   }
 
-  private def localVisit(regex: Regex, objectFieldRegex: Regex, inValDef: Boolean)
-                        (ast: Any): List[ScalastyleError] = {
+  private def localVisit(regex: Regex, objectFieldRegex: Regex, inValDef: Boolean)(ast: Any): List[ScalastyleError] = {
     ast match {
       //object Name { ... }
       case TmplDef(List(Token(OBJECT, _, _, _)), _, _, _, _, _, _, Some(TemplateBody(_, _, stats, _))) =>
         //go through all first-level val declarations and apply objectFieldRegex
-        stats.immediateChildren.flatMap(stat => stat match {
-          case FullDefOrDcl(_, _, PatDefOrDcl(Token(tokenType, _, _, _), expr, _, _, _)) if tokenType == VAL || tokenType == VAR =>
-            VisitorHelper.visit(expr, localVisit(objectFieldRegex, objectFieldRegex, inValDef = true))
-          case t =>
-            VisitorHelper.visit(t, localVisit(regex, objectFieldRegex, inValDef))
-        })
+        stats.immediateChildren.flatMap(stat =>
+          stat match {
+            case FullDefOrDcl(_, _, PatDefOrDcl(Token(tokenType, _, _, _), expr, _, _, _)) if tokenType == VAL || tokenType == VAR =>
+              VisitorHelper.visit(expr, localVisit(objectFieldRegex, objectFieldRegex, inValDef = true))
+            case t =>
+              VisitorHelper.visit(t, localVisit(regex, objectFieldRegex, inValDef))
+          }
+        )
 
       //val ... =
       case PatDefOrDcl(Token(tokenType, _, _, _), expr, _, _, _) if tokenType == VAL || tokenType == VAR =>

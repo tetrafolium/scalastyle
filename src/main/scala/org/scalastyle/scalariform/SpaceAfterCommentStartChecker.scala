@@ -35,13 +35,15 @@ class SpaceAfterCommentStartChecker extends ScalariformChecker {
     ast.tokens
       .filter(hasComment)
       .map {
-      _.associatedWhitespaceAndComments.comments.map {
-        case x: SingleLineComment if singleLineCommentRegex(x.token.text.trim) => Some(x.token.offset)
-        case x: MultiLineComment if multiLineCommentRegex(x.token) => Some(x.token.offset)
-        case x: ScalaDocComment if scalaDocPatternRegex(x.token) => Some(x.token.offset)
-        case _ => None
-      }.flatten
-    }.flatten.map(PositionError(_))
+        _.associatedWhitespaceAndComments.comments.map {
+          case x: SingleLineComment if singleLineCommentRegex(x.token.text.trim) => Some(x.token.offset)
+          case x: MultiLineComment if multiLineCommentRegex(x.token)             => Some(x.token.offset)
+          case x: ScalaDocComment if scalaDocPatternRegex(x.token)               => Some(x.token.offset)
+          case _                                                                 => None
+        }.flatten
+      }
+      .flatten
+      .map(PositionError(_))
   }
 
   private def multiLineCommentRegex(comment: Token) =

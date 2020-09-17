@@ -66,7 +66,7 @@ class IfBraceChecker extends CombinedChecker {
 
     val (elseLine, elseBodyLine) = t.t.elseClause match {
       case Some(e) => (lines.toLineColumn(e.elseToken.offset), firstLineOfGeneralTokens(e.elseBody, lines))
-      case None => (None, None)
+      case None    => (None, None)
     }
 
     if (ifBodyLine.isEmpty && (elseLine.isDefined && elseBodyLine.isEmpty)) return false
@@ -77,7 +77,7 @@ class IfBraceChecker extends CombinedChecker {
         if (!sameLine(ifLine, ifBodyLine) || !sameLine(elseLine, elseBodyLine)) {
           true
         } else {
-           if (sameLine(ifLine, elseLine)) !singleLineAllowed else !doubleLineAllowed
+          if (sameLine(ifLine, elseLine)) !singleLineAllowed else !doubleLineAllowed
         }
       }
       case _ => false
@@ -86,7 +86,7 @@ class IfBraceChecker extends CombinedChecker {
 
   private[this] def sameLine(l1: Option[LineColumn], l2: Option[LineColumn]) = (l1, l2) match {
     case (Some(x), Some(y)) => x.line == y.line
-    case _ => true
+    case _                  => true
   }
 
   /** this returns Some(x) if we are NOT BlockExpr, i.e. there are no braces */
@@ -94,8 +94,8 @@ class IfBraceChecker extends CombinedChecker {
     if (body.contents.nonEmpty) {
       body.contents.head match {
         case e: BlockExpr => None
-        case e: IfExpr => None
-        case e: Any => lines.toLineColumn(e.tokens.head.offset)
+        case e: IfExpr    => None
+        case e: Any       => lines.toLineColumn(e.tokens.head.offset)
       }
     } else {
       None
@@ -104,6 +104,6 @@ class IfBraceChecker extends CombinedChecker {
 
   private def localvisit(ast: Any): List[IfExprClazz] = ast match {
     case t: IfExpr => List(IfExprClazz(t, t.ifToken.offset, localvisit(t.body), localvisit(t.elseClause)))
-    case t: Any => visit(t, localvisit)
+    case t: Any    => visit(t, localvisit)
   }
 }

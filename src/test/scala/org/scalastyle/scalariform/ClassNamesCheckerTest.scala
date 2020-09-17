@@ -95,7 +95,6 @@ package object foobar {
   }
 }
 
-
 class PackageNamesCheckerTest extends AssertionsForJUnit with CheckerTest {
   val key = "package.name"
   val classUnderTest = classOf[PackageNamesChecker]
@@ -399,8 +398,10 @@ class FieldNamesCheckerTest extends AssertionsForJUnit with CheckerTest {
         columnError(7, 6, List("^[a-z][A-Za-z0-9]*$")),
         columnError(8, 6, List("^[a-z][A-Za-z0-9]*$")),
         columnError(9, 21, List("^[a-z][A-Za-z0-9]*$")),
-        columnError(10, 21, List("^[a-z][A-Za-z0-9]*$"))),
-      source)
+        columnError(10, 21, List("^[a-z][A-Za-z0-9]*$"))
+      ),
+      source
+    )
   }
 
   @Test def testDestructuring(): Unit = {
@@ -412,10 +413,10 @@ class FieldNamesCheckerTest extends AssertionsForJUnit with CheckerTest {
                     """.stripMargin
 
     assertErrors(List(), source)
-    assertErrors(List(
-      columnError(1, 8, List("^[a-z][A-Za-z0-9]*$")),
-      columnError(2, 9, List("^[a-z][A-Za-z0-9]*$")),
-      columnError(2, 18, List("^[a-z][A-Za-z0-9]*$"))), badSource)
+    assertErrors(
+      List(columnError(1, 8, List("^[a-z][A-Za-z0-9]*$")), columnError(2, 9, List("^[a-z][A-Za-z0-9]*$")), columnError(2, 18, List("^[a-z][A-Za-z0-9]*$"))),
+      badSource
+    )
   }
 
   @Test def testDestructuringWithTypesOK(): Unit = {
@@ -431,9 +432,7 @@ class FieldNamesCheckerTest extends AssertionsForJUnit with CheckerTest {
       """val (BBB: Foo, AAA: Bar) = baz
         |""".stripMargin
 
-    assertErrors(List(
-      columnError(1, 5, List("^[a-z][A-Za-z0-9]*$")),
-      columnError(1, 15, List("^[a-z][A-Za-z0-9]*$"))), source)
+    assertErrors(List(columnError(1, 5, List("^[a-z][A-Za-z0-9]*$")), columnError(1, 15, List("^[a-z][A-Za-z0-9]*$"))), source)
   }
 
   @Test def testObjectConst(): Unit = {

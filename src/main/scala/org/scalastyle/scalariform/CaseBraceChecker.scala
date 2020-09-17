@@ -41,7 +41,7 @@ class CaseBraceChecker extends CombinedChecker {
     import clause.statSeq._
     (firstStatOpt, otherStats.flatMap(_._2)) match {
       case (Some(Expr(List(block: BlockExpr))), Nil) => Some(block.lbrace.offset)
-      case _ => None
+      case _                                         => None
     }
   }
 }

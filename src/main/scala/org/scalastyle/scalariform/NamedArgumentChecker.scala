@@ -2,13 +2,13 @@ package org.scalastyle.scalariform
 
 import org.scalastyle._
 
-import _root_.scalariform.lexer.{ Token, Tokens }
+import _root_.scalariform.lexer.{Token, Tokens}
 import _root_.scalariform.parser._
 import scala.util.matching.Regex
 
 /**
- * Checks method calls to ensure that passed literals are named.
- */
+  * Checks method calls to ensure that passed literals are named.
+  */
 class NamedArgumentChecker extends ScalariformChecker {
   protected val errorKey: String = "named.argument"
   val DefaultCheckString = false
@@ -27,11 +27,7 @@ class NamedArgumentChecker extends ScalariformChecker {
 
     case Argument(Expr(List(GeneralTokens(List(Token(tokenType, _, offset, _)))))) =>
       val namelessLiteral = tokenType match {
-        case Tokens.NULL |
-             Tokens.FALSE | Tokens.TRUE |
-             Tokens.INTEGER_LITERAL |
-             Tokens.CHARACTER_LITERAL |
-             Tokens.FLOATING_POINT_LITERAL =>
+        case Tokens.NULL | Tokens.FALSE | Tokens.TRUE | Tokens.INTEGER_LITERAL | Tokens.CHARACTER_LITERAL | Tokens.FLOATING_POINT_LITERAL =>
           true
         case Tokens.STRING_LITERAL =>
           checkString

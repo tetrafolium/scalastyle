@@ -42,6 +42,6 @@ class NumberOfTypesChecker extends ScalariformChecker {
 
   private def localvisit(ast: Any): List[TmplDef] = ast match {
     case t: TmplDef => List(t) ::: localvisit(t.templateBodyOption)
-    case t: Any => visit(t, localvisit)
+    case t: Any     => visit(t, localvisit)
   }
 }

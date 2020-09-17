@@ -43,20 +43,17 @@ class foobar {
 
   @Test
   def testSimpleCheck(): Unit = {
-    assertErrors(List(columnError(7, 2, List("def"))), source,
-      Map("regex" -> "def"))
+    assertErrors(List(columnError(7, 2, List("def"))), source, Map("regex" -> "def"))
   }
 
   @Test
   def testNoSemiColon(): Unit = {
-    assertErrors(List(columnError(11, 17, List(";"))), source,
-      Map("regex" -> ";"))
+    assertErrors(List(columnError(11, 17, List(";"))), source, Map("regex" -> ";"))
   }
 
   @Test
   def testStartOfLineIsZeroColumn(): Unit = {
-    assertErrors(List(columnError(5, 0, List("class"))), source,
-      Map("regex" -> "class"))
+    assertErrors(List(columnError(5, 0, List("class"))), source, Map("regex" -> "class"))
   }
 
   @Test
@@ -71,14 +68,12 @@ class foobar {
 
   @Test
   def testNoDoubleBlankLines(): Unit = {
-    assertErrors(List(columnError(3, 0, List("(?m)^\\s*$(\\r|)\\n^\\s*$(\\r|)\\n"))), source,
-      Map("regex" -> "(?m)^\\s*$(\\r|)\\n^\\s*$(\\r|)\\n"))
+    assertErrors(List(columnError(3, 0, List("(?m)^\\s*$(\\r|)\\n^\\s*$(\\r|)\\n"))), source, Map("regex" -> "(?m)^\\s*$(\\r|)\\n^\\s*$(\\r|)\\n"))
   }
 
   @Test
   def testMultipleMatchesReportMultipleErrors(): Unit = {
-    assertErrors(List(columnError(12, 2, List("}")), columnError(14, 0, List("}"))), source,
-      Map("regex" -> "}"))
+    assertErrors(List(columnError(12, 2, List("}")), columnError(14, 0, List("}"))), source, Map("regex" -> "}"))
   }
 
   @Test
@@ -93,7 +88,6 @@ class foobar {
 
   @Test
   def testPerLine(): Unit = {
-    assertErrors(List(columnError(8, 0, List("^[^/]+println.*$"))), source,
-      Map("regex" -> "^[^/]+println.*$", "line" -> "true"))
+    assertErrors(List(columnError(8, 0, List("^[^/]+println.*$"))), source, Map("regex" -> "^[^/]+println.*$", "line" -> "true"))
   }
 }

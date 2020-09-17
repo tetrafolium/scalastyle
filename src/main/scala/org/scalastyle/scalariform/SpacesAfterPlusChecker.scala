@@ -53,6 +53,6 @@ class SpacesAfterPlusChecker extends ScalariformChecker {
 
   private def localVisit(ast: Any): List[InfixExpr] = ast match {
     case expr: InfixExpr => List(expr)
-    case other: Any => visit(other, localVisit)
+    case other: Any      => visit(other, localVisit)
   }
 }

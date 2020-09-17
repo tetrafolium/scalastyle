@@ -32,15 +32,15 @@ class ForBraceChecker extends CombinedChecker {
       t <- VisitorHelper.getAll[ForExpr](ast.compilationUnit.immediateChildren.head)
       if requireBraces(t, ast.lines) && (
         Tokens.LPAREN == t.lParenOrBrace.tokenType ||
-        Tokens.LPAREN == t.rParenOrBrace.tokenType
+          Tokens.LPAREN == t.rParenOrBrace.tokenType
       )
     } yield PositionError(t.lParenOrBrace.offset)
   }
 
   private def requireBraces(t: ForExpr, lines: Lines) = {
     t.yieldOption.nonEmpty && (
-      t.enumerators.tokens.exists(_.tokenType == Tokens.SEMI ) || !validSingleLine(t, lines)
-      )
+      t.enumerators.tokens.exists(_.tokenType == Tokens.SEMI) || !validSingleLine(t, lines)
+    )
   }
 
   private def validSingleLine(t: ForExpr, lines: Lines) = {

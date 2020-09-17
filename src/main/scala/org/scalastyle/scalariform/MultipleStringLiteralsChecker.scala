@@ -43,8 +43,8 @@ class MultipleStringLiteralsChecker extends ScalariformChecker {
   private def matches(s: String, regex: Regex) = (regex findAllIn (s)).size == 1
 
   private def strip(s: String) = {
-    if (s.length() > MultiQuoteLength*2 && startsAndEndsWith(s, MultiQuote)) {
-      Quote + s.substring(MultiQuoteLength,s.length()-MultiQuoteLength) + Quote
+    if (s.length() > MultiQuoteLength * 2 && startsAndEndsWith(s, MultiQuote)) {
+      Quote + s.substring(MultiQuoteLength, s.length() - MultiQuoteLength) + Quote
     } else {
       s
     }
