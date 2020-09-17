@@ -407,8 +407,8 @@ class ScalaDocCheckerTest extends AssertionsForJUnit with CheckerTest {
     )
 
     for ((declerations, ignoreTokenType) <- cases;
-         decleration <- declerations) {
-      assertErrors(Nil, decleration, Map("ignoreTokenTypes" -> ignoreTokenType))
+         declaration <- declerations) {
+      assertErrors(Nil, declaration, Map("ignoreTokenTypes" -> ignoreTokenType))
     }
   }
 
